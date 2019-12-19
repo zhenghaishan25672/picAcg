@@ -17,3 +17,17 @@ git commit --amend --no-edit
 
 ![时序图](https://raw.githubusercontent.com/zhenghaishan25672/notes/master/img/server/githubApp_token.jpg)
 
+## 脚本
+```sql
+create table USER
+(
+	ID INT auto_increment,
+	ACCOUNT_ID VARCHAR(100),
+	NAME VARCHAR(50),
+	TOKEN CHAR(36),
+	GMT_CREATE BIGINT,
+	GMT_MODIFIED BIGINT,
+	constraint USER_PK
+		primary key (ID)
+);
+```

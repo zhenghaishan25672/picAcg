@@ -1,5 +1,7 @@
 package life.picacg.community.community.dto;
-
+/*
+类和类之间传输用dto，网络传输的对象
+ */
 public class AccessTokenDTO {
     public String getClient_id() {
         return client_id;
