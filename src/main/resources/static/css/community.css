@@ -1,0 +1,22 @@
+.main{
+    margin:30px;
+}
+body{
+    background-color:#efefef;
+}
+.btn_publish{
+    float: right;
+    margin-bottom: 15px;
+}
+.white{
+    background-color: white;
+}
+.img_size{
+    width:40px;
+    height:40px;
+}
+.show_content{
+    font-size: 12px;
+    font-weight: normal;
+    color: #999;
+}

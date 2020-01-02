@@ -15,6 +15,10 @@ git commit --amend --no-edit
 
 [github app](https://developer.github.com/apps/building-github-apps/creating-a-github-app)
 
+[flyway](https://flywaydb.org/getstarted/)
+
+[lombok](https://projectlombok.org/setup/maven)
+
 ![时序图](https://raw.githubusercontent.com/zhenghaishan25672/notes/master/img/server/githubApp_token.jpg)
 
 ## 脚本
@@ -30,4 +34,7 @@ create table USER
 	constraint USER_PK
 		primary key (ID)
 );
+```
+```sql
+alter table USER add bio VARCHAR2(256);
 ```
