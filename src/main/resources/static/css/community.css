@@ -20,3 +20,12 @@ body{
     font-weight: normal;
     color: #999;
 }
+.main .white .margin_top{
+    margin-top: 30px;
+}
+.community_menu{
+    color: #999;
+}
+.jumbotron{
+    text-align: center;
+}

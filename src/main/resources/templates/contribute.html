@@ -1,0 +1,60 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title th:text="${publish.title}"></title>
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/css/bootstrap-theme.min.css">
+    <link rel="stylesheet" href="/css/community.css">
+    <script src="/js/jquery-3.4.1.min.js"></script>
+    <script src="/js/bootstrap.min.js" type="application/javascript"></script>
+</head>
+<body>
+<div th:replace="navigation :: nav"></div>
+<div class="container-fluid main">
+    <div class="row white">
+        <div class="col-lg-9 col-md-12 col-sm-12 col-xs-12">
+            <h3><span th:text="${publish.title}"></span></h3>
+            <span class="show_content">作者：</span>
+            <span class="show_content" th:text="${publish.user.name}"></span>
+            <span class="show_content">&nbsp;|&nbsp;&nbsp;浏览数：</span>
+            <span class="show_content" th:text="${publish.viewCount}"></span>
+            <span class="show_content btn_publish"
+                  th:text="${#dates.format(publish.gmtCreate,'yyyy-mm-dd HH:mm:ss')}"></span>
+            <hr>
+            <div class="col-lg-9 col-md-12 col-sm-12 col-xs-12" th:text="${publish.description}">
+            </div>
+            <hr class="col-lg-9 col-md-12 col-sm-12 col-xs-12">
+            <div class="col-lg-9 col-md-12 col-sm-12 col-xs-12">
+                <a th:href="@{'/publish/'+${publish.id}}" class="community_menu" th:if="${session.user != null && session.user.id == publish.creator}">
+                    <span class="glyphicon glyphicon-pencil" aria-hidden="true"></span>编辑
+                </a>
+            </div>
+        </div>
+        <div class="col-lg-3 col-md-12 col-sm-12 col-xs-12">
+            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                <h4 class="margin_top">发起人:</h4>
+                <div class="media">
+                    <div class="media-left">
+                        <a href="#">
+                            <img class="media-object img-rounded img_size"
+                                 th:src="${publish.user.getAvatarUrl()}">
+                        </a>
+                    </div>
+                    <div class="media-body">
+                        <h5 class="media-heading">
+                            <span th:text="${publish.user.name}"></span>
+                        </h5>
+            </div>
+            <hr>
+            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                <h4>相关问题:</h4>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>
