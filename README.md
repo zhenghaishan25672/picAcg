@@ -23,6 +23,8 @@ git commit --amend --no-edit
 
 ## 脚本
 ```bash
-mvn flyway:miagrate
+mvn flyway:migrate
+```
+```bash
 mvn -Dmybatis.generator.overwrite=true mybatis-generator:generate
 ```

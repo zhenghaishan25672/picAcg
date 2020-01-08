@@ -15,10 +15,12 @@ public class ContributeController {
     public PublishService publishService;
 
     @GetMapping("/contribute/{id}")
-    public String contribute(@PathVariable(name = "id") Integer id,
+        public String contribute(@PathVariable(name = "id") Long id,
                              Model model){
-
         PublishDTO publishDTO = publishService.getById(id);
+
+        //累加阅读数
+        publishService.incView(id);
         model.addAttribute("publish",publishDTO);
         return "contribute";
     }

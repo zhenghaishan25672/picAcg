@@ -4,6 +4,7 @@ import life.picacg.community.community.dto.PaginationDTO;
 import life.picacg.community.community.dto.PublishDTO;
 import life.picacg.community.community.exception.CustomizeErrorCode;
 import life.picacg.community.community.exception.CustomizeException;
+import life.picacg.community.community.mapper.PublishExtMapper;
 import life.picacg.community.community.mapper.PublishMapper;
 import life.picacg.community.community.mapper.UserMapper;
 import life.picacg.community.community.model.Publish;
@@ -22,6 +23,9 @@ public class PublishService {
 
     @Autowired
     private PublishMapper publishMapper;
+
+    @Autowired
+    private PublishExtMapper publishExtMapper;
 
     @Autowired
     private UserMapper userMapper;
@@ -66,7 +70,7 @@ public class PublishService {
         return paginationDTO;
     }
 
-    public PaginationDTO list(Integer userId, Integer page, Integer size) {
+    public PaginationDTO list(Long userId, Integer page, Integer size) {
         PublishExample publishExample = new PublishExample();
         publishExample.createCriteria().andCreatorEqualTo(userId);
         Integer totalCount = (int) publishMapper.countByExample(publishExample);
@@ -109,7 +113,7 @@ public class PublishService {
         return paginationDTO;
     }
 
-    public PublishDTO getById(Integer id) {
+    public PublishDTO getById(Long id) {
         Publish publish = publishMapper.selectByPrimaryKey(id);
         if(publish == null){
             throw new CustomizeException(CustomizeErrorCode.CONTRIBUTE_NOT_FOUND);
@@ -126,6 +130,9 @@ public class PublishService {
             //创建
             publish.setGmtCreate(System.currentTimeMillis());
             publish.setGmtModified(publish.getGmtCreate());
+            publish.setViewCount(0);
+            publish.setLikeCount(0);
+            publish.setCommentCount(0);
             publishMapper.insert(publish);
         }else{
             //更新
@@ -141,5 +148,12 @@ public class PublishService {
                 throw new CustomizeException(CustomizeErrorCode.CONTRIBUTE_NOT_FOUND);
             }
         }
+    }
+
+    public void incView(Long id) {
+        Publish publish = new Publish();
+        publish.setId(id);
+        publish.setViewCount(1);
+        publishExtMapper.incView(publish);
     }
 }
