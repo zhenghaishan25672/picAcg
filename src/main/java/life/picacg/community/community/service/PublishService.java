@@ -10,13 +10,17 @@ import life.picacg.community.community.mapper.UserMapper;
 import life.picacg.community.community.model.Publish;
 import life.picacg.community.community.model.PublishExample;
 import life.picacg.community.community.model.User;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.ibatis.session.RowBounds;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.StringJoiner;
+import java.util.stream.Collectors;
 
 @Service
 public class PublishService {
@@ -51,7 +55,9 @@ public class PublishService {
         paginationDTO.setPagination(totalPage, page);
         Integer offset = size * (page - 1);
         //将每一页的列表返回到数组
-        List<Publish> publishes = publishMapper.selectByExampleWithBLOBsWithRowbounds(new PublishExample(), new RowBounds(offset, size));
+        PublishExample publishExample = new PublishExample();
+        publishExample.setOrderByClause("gmt_create desc");
+        List<Publish> publishes = publishMapper.selectByExampleWithBLOBsWithRowbounds(publishExample, new RowBounds(offset, size));
         List<PublishDTO> publishDTOList = new ArrayList<>();
         //
 
@@ -136,17 +142,28 @@ public class PublishService {
             publishMapper.insert(publish);
         }else{
             //更新
-            Publish updatePublish = new Publish();
-            updatePublish.setGmtModified(System.currentTimeMillis());
-            updatePublish.setTitle(publish.getTitle());
-            updatePublish.setDescription(publish.getDescription());
-            updatePublish.setTag(publish.getTag());
-            PublishExample example = new PublishExample();
-            example.createCriteria().andCreatorEqualTo(publish.getId());
-            int updated = publishMapper.updateByExampleSelective(updatePublish, example);
-            if(updated != 0){
+            Publish dbQuestion = publishMapper.selectByPrimaryKey(publish.getId());
+            if (dbQuestion == null) {
                 throw new CustomizeException(CustomizeErrorCode.CONTRIBUTE_NOT_FOUND);
             }
+
+//            if (dbQuestion.getCreator().longValue() != publish.getCreator().longValue()) {
+//                throw new CustomizeException(CustomizeErrorCode.INVALID_OPERATION);
+//            }
+
+            Publish updateQuestion = new Publish();
+            updateQuestion.setGmtModified(System.currentTimeMillis());
+            updateQuestion.setTitle(publish.getTitle());
+            updateQuestion.setDescription(publish.getDescription());
+            updateQuestion.setTag(publish.getTag());
+            PublishExample example = new PublishExample();
+            example.createCriteria()
+                    .andIdEqualTo(publish.getId());
+            int updated = publishMapper.updateByExampleSelective(updateQuestion, example);
+            if (updated != 1) {
+                throw new CustomizeException(CustomizeErrorCode.CONTRIBUTE_NOT_FOUND);
+            }
+
         }
     }
 
@@ -155,5 +172,30 @@ public class PublishService {
         publish.setId(id);
         publish.setViewCount(1);
         publishExtMapper.incView(publish);
+    }
+
+    public List<PublishDTO> selectRelated(PublishDTO queryDTO) {
+        if(StringUtils.isBlank(queryDTO.getTag())){
+            return new ArrayList<>();
+        }
+        String[] tags = StringUtils.split(queryDTO.getTag(), ",");
+        String regexpTag = Arrays
+                .stream(tags)
+                .filter(StringUtils::isNotBlank)
+                .map(t -> t.replace("+", "").replace("*", "").replace("?", ""))
+                .filter(StringUtils::isNotBlank)
+                .collect(Collectors.joining("|"));
+
+        Publish publish = new Publish();
+        publish.setId(queryDTO.getId());
+        publish.setTag(regexpTag);
+
+        List<Publish> publishes = publishExtMapper.selectRelated(publish);
+        List<PublishDTO> publishDTOS = publishes.stream().map(q -> {
+            PublishDTO publishDTO = new PublishDTO();
+            BeanUtils.copyProperties(q,publishDTO);
+            return publishDTO;
+        }).collect(Collectors.toList());
+        return publishDTOS;
     }
 }

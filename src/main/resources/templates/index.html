@@ -37,7 +37,7 @@
                     <span class="show_content">浏览数：</span><span class="show_content"
                                                                 th:text="${publish.viewCount}">233</span>
                     <span class="show_content btn_publish"
-                          th:text="${#dates.format(publish.gmtCreate,'yyyy-mm-dd HH:mm:ss')}"></span>
+                          th:text="${#dates.format(publish.gmtCreate,'yyyy-MM-dd HH:mm:ss')}"></span>
                 </div>
             </div>
             <nav aria-label="Page navigation">
@@ -77,4 +77,13 @@
     </div>
 </div>
 </body>
+<script type="application/javascript">
+    window.onload = function () {
+        var closable = window.localStorage.getItem("closable");
+        if(closable == "true"){
+            window.close();
+            window.localStorage.removeItem("closable");
+        }
+    }
+</script>
 </html>

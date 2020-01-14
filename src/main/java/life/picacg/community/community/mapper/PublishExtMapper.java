@@ -10,4 +10,5 @@ import java.util.List;
 public interface PublishExtMapper {
     int incView(Publish record);
     int incCommentCount(Publish record);
+    List<Publish> selectRelated(Publish publish);
 }

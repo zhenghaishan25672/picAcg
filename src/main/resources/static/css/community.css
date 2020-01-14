@@ -20,12 +20,66 @@ body{
     font-weight: normal;
     color: #999;
 }
-.main .white .margin_top{
+.main .white .margin_top_30{
     margin-top: 30px;
 }
-.community_menu{
+.main .white .margin_top_15{
+    margin-top: 15px;
+}
+.main .white .margin_top_5{
+    margin-top: 5px;
+}
+.main .white .margin_top_0{
+    margin-top: 0px;
+}
+.main .white .margin_left_5{
+    margin-left: 5px;
+}
+.main .white .margin_bottom_2{
+    margin-bottom: 2px;
+}
+.main .white .margin_bottom_5{
+    margin-bottom: 5px;
+}
+.main .white .margin_bottom_15{
+    margin-bottom: 15px;
+}
+.main .white .margin_left_15{
+    margin-left: 15px;
+}
+.color_999{
     color: #999;
 }
 .jumbotron{
     text-align: center;
+}
+.padding_top_10{
+    padding-top: 10px;
+}
+.pointer{
+    color: #999;
+    cursor: pointer;
+}
+.pointer:hover{
+    color: lightskyblue;
+    cursor: pointer;
+}
+.lightskyblue{
+    color: lightskyblue;
+}
+.padding_0{
+    padding: 0px;
+}
+.border_eee{
+    border: 1px solid #eee;
+    padding: 15px;
+    border-radius: 5px;
+    margin-bottom: 15px;
+}
+.publish-rated{
+    line-height: 20px;
+    font-size: 12px;
+    margin-left: 0;
+    list-style: none;
+    padding-left: 0;
 }
