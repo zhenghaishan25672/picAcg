@@ -29,6 +29,11 @@
                     <li th:if="${session.user!=null}">
                         <a href="/publish">投稿</a>
                     </li>
+                    <li>
+                        <a href="/profile/replies">通知
+                            <span class="badge" th:text="${unreadCount}"></span>
+                        </a>
+                    </li>
                     <li class="dropdown" th:if="${session.user!=null}">
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true"
                            aria-expanded="false">
@@ -36,7 +41,6 @@
                             <span class="caret"></span>
                         </a>
                         <ul class="dropdown-menu">
-                            <li><a href="#">消息中心</a></li>
                             <li><a href="/profile/publishes">我的投稿</a></li>
                             <li><a href="/logout">退出登录</a></li>
                             <li role="separator" class="divider"></li>

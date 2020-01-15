@@ -10,8 +10,8 @@ import java.util.List;
 类和类之间传输用dto，网络传输的对象
  */
 @Data
-public class PaginationDTO {
-    private List<PublishDTO> publishes;
+public class PaginationDTO<T> {
+    private List<T> data;
     private boolean showPrevious;
     private boolean showFirstPage;
     private boolean showNext;

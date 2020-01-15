@@ -71,16 +71,19 @@ public class PublishService {
             //最后将publishDTO的内容添加到publishDTOList中
             publishDTOList.add(publishDTO);
         }
-        paginationDTO.setPublishes(publishDTOList);
+        paginationDTO.setData(publishDTOList);
 
         return paginationDTO;
     }
 
     public PaginationDTO list(Long userId, Integer page, Integer size) {
+        PaginationDTO paginationDTO = new PaginationDTO();
+
+        Integer totalPage;
+
         PublishExample publishExample = new PublishExample();
         publishExample.createCriteria().andCreatorEqualTo(userId);
         Integer totalCount = (int) publishMapper.countByExample(publishExample);
-        Integer totalPage;
 
         if (totalCount % size == 0) {
             totalPage = totalCount / size;
@@ -94,7 +97,6 @@ public class PublishService {
             page = totalPage;
         }
 
-        PaginationDTO paginationDTO = new PaginationDTO();
         paginationDTO.setPagination(totalPage, page);
         Integer offset = size * (page - 1);
         //将每一页的列表返回到数组
@@ -114,7 +116,7 @@ public class PublishService {
             //最后将publishDTO的内容添加到publishDTOList中
             publishDTOList.add(publishDTO);
         }
-        paginationDTO.setPublishes(publishDTOList);
+        paginationDTO.setData(publishDTOList);
 
         return paginationDTO;
     }
@@ -174,6 +176,7 @@ public class PublishService {
         publishExtMapper.incView(publish);
     }
 
+    /*标签关联关系*/
     public List<PublishDTO> selectRelated(PublishDTO queryDTO) {
         if(StringUtils.isBlank(queryDTO.getTag())){
             return new ArrayList<>();

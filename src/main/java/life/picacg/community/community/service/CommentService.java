@@ -2,6 +2,8 @@ package life.picacg.community.community.service;
 
 import life.picacg.community.community.dto.CommentDTO;
 import life.picacg.community.community.enums.CommentTypeEnum;
+import life.picacg.community.community.enums.NotificationStatusEnum;
+import life.picacg.community.community.enums.NotificationTypeEnum;
 import life.picacg.community.community.exception.CustomizeErrorCode;
 import life.picacg.community.community.exception.CustomizeException;
 import life.picacg.community.community.mapper.*;
@@ -35,9 +37,12 @@ public class CommentService {
     @Autowired
     private CommentExtMapper commentExtMapper;
 
+    @Autowired
+    private NotificationMapper notificationMapper;
+
     //将下列所有的代码添加到一个事物中，当请求失败时，全部回滚
     @Transactional
-    public void insert(Comment comment) {
+    public void insert(Comment comment, User commentator) {
         if(comment.getParentId() == null || comment.getParentId() == 0){
             throw new CustomizeException(CustomizeErrorCode.TARGET_PARAM_NOT_FOUND);
         }
@@ -52,6 +57,12 @@ public class CommentService {
             if(dbComment == null){
                 throw new CustomizeException(CustomizeErrorCode.COMMENT_NOT_FOUND);
             }
+            // 回复问题
+            Publish publish = publishMapper.selectByPrimaryKey(dbComment.getParentId());
+            if (publish == null) {
+                throw new CustomizeException(CustomizeErrorCode.CONTRIBUTE_NOT_FOUND);
+            }
+
             commentMapper.insert(comment);
 
             //增加评论数
@@ -59,6 +70,9 @@ public class CommentService {
             parentComment.setId(comment.getParentId());
             parentComment.setCommentCount(1);
             commentExtMapper.incCommentCount(parentComment);
+
+            // 创建通知
+            createNotify(comment, dbComment.getCommentator(), commentator.getName(), publish.getTitle(), NotificationTypeEnum.REPLY_COMMENT, publish.getId());
         }else{
             //回复问题
             Publish publish = publishMapper.selectByPrimaryKey(comment.getParentId());
@@ -69,11 +83,31 @@ public class CommentService {
             * 在网络延迟和数据库抖动的情况下，可能存在评论插入成功，但是回复数未增加的情况
             * 这就需要引入事物的概念来处理
             * */
+            comment.setCommentCount(0);
             commentMapper.insert(comment);
             publish.setCommentCount(1);
             publishExtMapper.incCommentCount(publish);
+
+            // 创建通知
+            createNotify(comment, publish.getCreator(), commentator.getName(), publish.getTitle(), NotificationTypeEnum.REPLY_CONTRIBUTE, publish.getId());
         }
 
+    }
+
+    private void createNotify(Comment comment, Long receiver, String notifierName, String outerTitle, NotificationTypeEnum notificationType, Long outerId) {
+//        if (receiver == comment.getCommentator()) {
+//            return;
+//        }
+        Notification notification = new Notification();
+        notification.setGmtCreate(System.currentTimeMillis());
+        notification.setType(notificationType.getType());
+        notification.setOuterid(outerId);
+        notification.setNotifier(comment.getCommentator());
+        notification.setStatus(NotificationStatusEnum.UNREAD.getStatus());
+        notification.setReceiver(receiver);
+        notification.setNotifierName(notifierName);
+        notification.setOuterTitle(outerTitle);
+        notificationMapper.insert(notification);
     }
 
     public List<CommentDTO> listByTargetId(Long id, CommentTypeEnum type) {
