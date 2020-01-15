@@ -43,7 +43,31 @@
             </div>
 
             <!--正文-->
-            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12" th:text="${publish.description}"></div>
+            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                <span th:text="${publish.description}"></span>
+                <hr>
+            </div>
+
+            <!--回复输入-->
+            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 " id="comment_section">
+                <h4>提交回复</h4>
+                <hr class="margin_top_0">
+                <div class="media-left">
+                    <a href="#">
+                        <img class="media-object img-rounded img_size"
+                             th:src="${publish.user.getAvatarUrl()}">
+                    </a>
+                </div>
+                <div class="media-body">
+                    <h5 class="media-heading padding_top_10">
+                        <span th:text="${publish.user.name}"></span>
+                    </h5>
+                </div>
+                <!--                <input type="hidden" class="type" id="contribute_id" th:value="23333">-->
+                <input type="hidden" class="type" id="contribute_id" th:value="${publish.id}">
+                <input class="form-control margin_top_15" rows="6" id="comment_content">
+                <button class="btn btn-success btn_publish margin_top_15" onclick="post()">回复</button>
+            </div>
 
             <!--回复-->
             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
@@ -89,26 +113,6 @@
                 </div>
             </div>
 
-            <!--回复输入-->
-            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 " id="comment_section">
-                <h4>提交回复</h4>
-                <hr class="margin_top_0">
-                <div class="media-left">
-                    <a href="#">
-                        <img class="media-object img-rounded img_size"
-                             th:src="${publish.user.getAvatarUrl()}">
-                    </a>
-                </div>
-                <div class="media-body">
-                    <h5 class="media-heading padding_top_10">
-                        <span th:text="${publish.user.name}"></span>
-                    </h5>
-                </div>
-                <!--                <input type="hidden" class="type" id="contribute_id" th:value="23333">-->
-                <input type="hidden" class="type" id="contribute_id" th:value="${publish.id}">
-                <textarea class="form-control margin_top_15" rows="6" id="comment_content"></textarea>
-                <button class="btn btn-success btn_publish margin_top_15" onclick="post()">回复</button>
-            </div>
         </div>
 
         <!--右侧主要内容-->
@@ -130,7 +134,7 @@
                     <hr>
                     <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 padding_0">
                         <h4>关注我们:</h4>
-                        <img src="/images/123.png" class="img-thumbnail">
+<!--                        <img src="/images/123.png" class="img-thumbnail">-->
                     </div>
                     <hr>
                     <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 padding_0">

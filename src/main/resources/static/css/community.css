@@ -56,8 +56,10 @@ body{
 .padding_top_10{
     padding-top: 10px;
 }
+.margin_top_5{
+    margin-top:5px;
+}
 .pointer{
-    color: #999;
     cursor: pointer;
 }
 .pointer:hover{
@@ -82,4 +84,7 @@ body{
     margin-left: 0;
     list-style: none;
     padding-left: 0;
+}
+#select-tag{
+    display: none;
 }

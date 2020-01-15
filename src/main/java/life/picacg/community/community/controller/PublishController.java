@@ -1,9 +1,11 @@
 package life.picacg.community.community.controller;
 
+import life.picacg.community.community.cache.TagCache;
 import life.picacg.community.community.dto.PublishDTO;
 import life.picacg.community.community.model.Publish;
 import life.picacg.community.community.model.User;
 import life.picacg.community.community.service.PublishService;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -28,14 +30,17 @@ public class PublishController {
         model.addAttribute("description", publish.getDescription());
         model.addAttribute("tag", publish.getTag());
         model.addAttribute("id", publish.getId());
+        model.addAttribute("tags", TagCache.get());
         return "publish";
     }
 
     //普通跳转到publish页面
     @GetMapping("/publish")
-    public String publish() {
+    public String publish(Model model) {
+        model.addAttribute("tags", TagCache.get());
         return "publish";
     }
+
 
     //按下按钮发起post请求后（post请求失败），回调到publish页面
     @PostMapping("/publish")
@@ -51,6 +56,7 @@ public class PublishController {
         model.addAttribute("title", title);
         model.addAttribute("description", description);
         model.addAttribute("tag", tag);
+        model.addAttribute("tags", TagCache.get());
 
         User user = (User) request.getSession().getAttribute("user");
         if (user == null) {
@@ -67,6 +73,12 @@ public class PublishController {
         }
         if (tag == null || tag == "") {
             model.addAttribute("error", "标签不能为空");
+            return "publish";
+        }
+
+        String invalid = TagCache.filterInvalid(tag);
+        if (StringUtils.isNotBlank(invalid)) {
+            model.addAttribute("error", "输入非法标签:" + invalid);
             return "publish";
         }
 
