@@ -3,6 +3,7 @@ package life.picacg.community.community.interceptor;
 import life.picacg.community.community.mapper.UserMapper;
 import life.picacg.community.community.model.User;
 import life.picacg.community.community.model.UserExample;
+import life.picacg.community.community.service.NotificationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.servlet.HandlerInterceptor;
@@ -16,6 +17,9 @@ import java.util.List;
 public class SessionInterceptor implements HandlerInterceptor {
     @Autowired
     private UserMapper userMapper;
+
+    @Autowired
+    private NotificationService notificationService;
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
@@ -32,6 +36,7 @@ public class SessionInterceptor implements HandlerInterceptor {
                     //如果能找到对应用户信息，则登录成功，更新登录状态
                     if (users.size() != 0) {
                         request.getSession().setAttribute("user", users.get(0));
+                        request.getSession().setAttribute("unreadCount", notificationService.unreadCount(users.get(0).getId()));
                     }
                     break;
                 }

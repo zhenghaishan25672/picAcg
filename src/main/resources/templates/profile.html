@@ -101,7 +101,7 @@
                    th:classappend="${section == 'publishes'}? 'active':''">我的投稿</a>
                 <a href="/profile/replies" class="list-group-item"
                    th:classappend="${section == 'replies'}? 'active':''">
-                    <span class="badge" th:text="${unreadCount}"></span>
+                    <span class="badge" th:text="${session.unreadCount}"></span>
                     最新回复
                 </a>
             </div>

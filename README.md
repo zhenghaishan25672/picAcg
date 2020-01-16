@@ -28,3 +28,7 @@ mvn flyway:migrate
 ```bash
 mvn -Dmybatis.generator.overwrite=true mybatis-generator:generate
 ```
+
+## 部署
+yum update
+yum install git 

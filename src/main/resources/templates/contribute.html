@@ -53,14 +53,14 @@
                 <h4>提交回复</h4>
                 <hr class="margin_top_0">
                 <div class="media-left">
-                    <a href="#">
+                    <a th:href="@{'/images/headImg.png'}">
                         <img class="media-object img-rounded img_size"
-                             th:src="${publish.user.getAvatarUrl()}">
+                             th:src="${session.user != null ? session.user.getAvatarUrl() : '/images/headImg.png'}">
                     </a>
                 </div>
                 <div class="media-body">
                     <h5 class="media-heading padding_top_10">
-                        <span th:text="${publish.user.name}"></span>
+                        <span th:text="${session.user != null ? session.user.name : '匿名用户'}"></span>
                     </h5>
                 </div>
                 <!--                <input type="hidden" class="type" id="contribute_id" th:value="23333">-->

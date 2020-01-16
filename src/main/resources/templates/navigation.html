@@ -31,7 +31,7 @@
                     </li>
                     <li>
                         <a href="/profile/replies">通知
-                            <span class="badge" th:text="${unreadCount}"></span>
+                            <span class="badge" th:text="${session.unreadCount}"></span>
                         </a>
                     </li>
                     <li class="dropdown" th:if="${session.user!=null}">
