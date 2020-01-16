@@ -32,3 +32,10 @@ mvn -Dmybatis.generator.overwrite=true mybatis-generator:generate
 ## 部署
 yum update
 yum install git 
+git clone https://github.com/zhenghaishan25672/picAcg.git
+yum install maven (java -version mvn -v)
+mvn clean compile package
+cp src/main/resources/application.properties src/main/resources/application-production.properties
+vim src/main/resources/application-production.properties
+mvn package
+java -jar -Dspring.profiles.active=production target/community-0.0.1-SNAPSHOT.jar
