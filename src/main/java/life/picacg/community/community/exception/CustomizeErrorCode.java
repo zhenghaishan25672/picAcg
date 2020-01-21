@@ -11,6 +11,8 @@ public enum CustomizeErrorCode implements ICustomizeErrorCode{
     CONTENT_IS_EMPTY(2007,"输入内容不能为空"),
     READ_NOTIFICATION_FAIL(2008, "读取信息失败"),
     NOTIFICATION_NOT_FOUND(2009, "信息查找失败"),
+    FILE_STYLE_FAIL(2010, "文件类型错误"),
+    FILE_SAVE_FAIL(2010, "文件保存失败"),
     ;
 
     @Override

@@ -9,10 +9,14 @@
     <link rel="stylesheet" href="/css/bootstrap.min.css">
     <link rel="stylesheet" href="/css/bootstrap-theme.min.css">
     <link rel="stylesheet" href="/css/community.css">
+    <link rel="stylesheet" href="/css/editormd.preview.min.css">
     <script src="/js/moment.js" type="application/javascript"></script>
     <script src="/js/jquery-3.4.1.min.js" type="application/javascript"></script>
     <script src="/js/community.js" type="application/javascript"></script>
     <script src="/js/bootstrap.min.js" type="application/javascript"></script>
+    <script src="/js/editormd.min.js"></script>
+    <script src="/js/lib/marked.min.js"></script>
+    <script src="/js/lib/prettify.min.js"></script>
 </head>
 <body>
 <div th:replace="navigation :: nav"></div>
@@ -43,10 +47,15 @@
             </div>
 
             <!--正文-->
-            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                <span th:text="${publish.description}"></span>
+            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12" id="publish-view">
+                <textarea style="display: none" th:text="${publish.description}"></textarea>
                 <hr>
             </div>
+            <script type="text/javascript">
+                $(function () {
+                    editormd.markdownToHTML("publish-view", {});
+                });
+            </script>
 
             <!--回复输入-->
             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 " id="comment_section">
