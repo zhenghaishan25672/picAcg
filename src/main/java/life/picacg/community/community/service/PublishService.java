@@ -1,5 +1,6 @@
 package life.picacg.community.community.service;
 
+import life.picacg.community.community.dto.ContributeQueryDTO;
 import life.picacg.community.community.dto.PaginationDTO;
 import life.picacg.community.community.dto.PublishDTO;
 import life.picacg.community.community.exception.CustomizeErrorCode;
@@ -34,8 +35,16 @@ public class PublishService {
     @Autowired
     private UserMapper userMapper;
 
-    public PaginationDTO list(Integer page, Integer size) {
-        Integer totalCount = (int) publishMapper.countByExample(new PublishExample());
+    public PaginationDTO list(String search , Integer page, Integer size) {
+
+        if(StringUtils.isNotBlank(search)){
+            String[] tags = StringUtils.split(search," ");
+            search = Arrays.stream(tags).collect(Collectors.joining("|"));
+        }
+
+        ContributeQueryDTO contributeQueryDTO = new ContributeQueryDTO();
+        contributeQueryDTO.setSearch(search);
+        Integer totalCount = publishExtMapper.countBySearch(contributeQueryDTO);
         Integer totalPage;
 
         if (totalCount % size == 0) {
@@ -57,7 +66,9 @@ public class PublishService {
         //将每一页的列表返回到数组
         PublishExample publishExample = new PublishExample();
         publishExample.setOrderByClause("gmt_create desc");
-        List<Publish> publishes = publishMapper.selectByExampleWithBLOBsWithRowbounds(publishExample, new RowBounds(offset, size));
+        contributeQueryDTO.setSize(size);
+        contributeQueryDTO.setPage(offset);
+        List<Publish> publishes = publishExtMapper.selectBySearch(contributeQueryDTO);
         List<PublishDTO> publishDTOList = new ArrayList<>();
         //
 

@@ -23,7 +23,28 @@
     set COMMENT_COUNT = COMMENT_COUNT + #{commentCount,jdbcType = INTEGER}
     where id = #{id}
   </update>
+
   <select id="selectRelated" parameterType="life.picacg.community.community.model.Publish" resultMap="BaseResultMap">
     select * from PUBLISH where id != ${id} and tag regexp #{tag}
   </select>
+
+  <select id="countBySearch" parameterType="life.picacg.community.community.dto.ContributeQueryDTO" resultType="java.lang.Integer">
+    select count(*)  from PUBLISH
+    <where>
+        <if test="search != null">
+          and title regexp #{search}
+        </if>
+    </where>
+  </select>
+
+  <select id="selectBySearch" parameterType="life.picacg.community.community.dto.ContributeQueryDTO" resultMap="BaseResultMap">
+    select * from PUBLISH
+    <where>
+        <if test="search != null">
+          and title regexp #{search}
+        </if>
+    </where>
+    order by gmt_create desc limit #{page},#{size}
+  </select>
+
 </mapper>
