@@ -35,15 +35,17 @@ public class PublishService {
     @Autowired
     private UserMapper userMapper;
 
-    public PaginationDTO list(String search , Integer page, Integer size) {
+    public PaginationDTO list(String search, String tag, Integer page, Integer size) {
 
-        if(StringUtils.isNotBlank(search)){
-            String[] tags = StringUtils.split(search," ");
+        if (StringUtils.isNotBlank(search)) {
+            String[] tags = StringUtils.split(search, " ");
             search = Arrays.stream(tags).collect(Collectors.joining("|"));
         }
 
         ContributeQueryDTO contributeQueryDTO = new ContributeQueryDTO();
         contributeQueryDTO.setSearch(search);
+        contributeQueryDTO.setTag(tag);
+
         Integer totalCount = publishExtMapper.countBySearch(contributeQueryDTO);
         Integer totalPage;
 
@@ -134,7 +136,7 @@ public class PublishService {
 
     public PublishDTO getById(Long id) {
         Publish publish = publishMapper.selectByPrimaryKey(id);
-        if(publish == null){
+        if (publish == null) {
             throw new CustomizeException(CustomizeErrorCode.CONTRIBUTE_NOT_FOUND);
         }
         PublishDTO publishDTO = new PublishDTO();
@@ -145,7 +147,7 @@ public class PublishService {
     }
 
     public void createOrUpdate(Publish publish) {
-        if(publish.getId() == null){
+        if (publish.getId() == null) {
             //创建
             publish.setGmtCreate(System.currentTimeMillis());
             publish.setGmtModified(publish.getGmtCreate());
@@ -153,7 +155,7 @@ public class PublishService {
             publish.setLikeCount(0);
             publish.setCommentCount(0);
             publishMapper.insert(publish);
-        }else{
+        } else {
             //更新
             Publish dbQuestion = publishMapper.selectByPrimaryKey(publish.getId());
             if (dbQuestion == null) {
@@ -189,7 +191,7 @@ public class PublishService {
 
     /*标签关联关系*/
     public List<PublishDTO> selectRelated(PublishDTO queryDTO) {
-        if(StringUtils.isBlank(queryDTO.getTag())){
+        if (StringUtils.isBlank(queryDTO.getTag())) {
             return new ArrayList<>();
         }
         String[] tags = StringUtils.split(queryDTO.getTag(), ",");
@@ -207,7 +209,7 @@ public class PublishService {
         List<Publish> publishes = publishExtMapper.selectRelated(publish);
         List<PublishDTO> publishDTOS = publishes.stream().map(q -> {
             PublishDTO publishDTO = new PublishDTO();
-            BeanUtils.copyProperties(q,publishDTO);
+            BeanUtils.copyProperties(q, publishDTO);
             return publishDTO;
         }).collect(Collectors.toList());
         return publishDTOS;
